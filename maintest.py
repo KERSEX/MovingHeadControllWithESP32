@@ -7,17 +7,17 @@ import serial.tools.list_ports
 
 # === KONFIGURATION ===
 UDP_PORT = 12345
-DMX_PORT = "COM4"  # <-- Hier muss dein USB-DMX-Gerät stehen, NICHT der ESP32!
+#DMX_PORT = "COM4"  # <-- Hier muss dein USB-DMX-Gerät stehen, NICHT der ESP32!
 BAUDRATE = 250000
 
 # === DMX-Initialisierung ===
-dmx_data = [0] * 512
-try:
-    ser = serial.Serial(DMX_PORT, baudrate=BAUDRATE, bytesize=8, parity='N', stopbits=2)
-    print(f"[INFO] Verbunden mit DMX-Interface an {DMX_PORT}")
-except serial.SerialException as e:
-    print(f"[FEHLER] Konnte {DMX_PORT} nicht öffnen: {e}")
-    exit(1)
+#dmx_data = [0] * 512
+#try:
+#    ser = serial.Serial(DMX_PORT, baudrate=BAUDRATE, bytesize=8, parity='N', stopbits=2)
+#    print(f"[INFO] Verbunden mit DMX-Interface an {DMX_PORT}")
+#except serial.SerialException as e:
+#    print(f"[FEHLER] Konnte {DMX_PORT} nicht öffnen: {e}")
+#    exit(1)
 
 def send_dmx_frame(data):
     """Sendet DMX-Daten über USB-DMX Interface."""
@@ -37,12 +37,16 @@ def triangulation(rssi1, rssi2):
     freq = 2400  # MHz
     d1 = 10 ** ((27.55 - (20 * np.log10(freq)) + abs(rssi1)) / 20)
     d2 = 10 ** ((27.55 - (20 * np.log10(freq)) + abs(rssi2)) / 20)
+    print(f"[TRIANGULATION] RSSI1: {rssi1}, RSSI2: {rssi2} => d1: {d1:.2f}, d2: {d2:.2f}")
     return d1, d2
 
 def set_dmx_values(pan, tilt):
     """Berechnet DMX-Werte aus Position und sendet sie."""
-    dmx_data[0] = int(np.clip(pan * 255 / 10, 0, 255))
-    dmx_data[1] = int(np.clip(tilt * 255 / 10, 0, 255))
+    pan_value = int(np.clip(pan * 255 / 10, 0, 255))
+    tilt_value = int(np.clip(tilt * 255 / 10, 0, 255))
+    dmx_data[0] = pan_value
+    dmx_data[1] = tilt_value
+    print(f"[DMX] Pan: {pan:.2f} -> {pan_value}, Tilt: {tilt:.2f} -> {tilt_value}")
     send_dmx_frame(dmx_data)
 
 # === Visualisierung ===
@@ -62,6 +66,7 @@ while True:
             d1, d2 = triangulation(rssi1, rssi2)
             x = (d1 + d2) / 2
             y = (d1 - d2) / 2
+            print(f"[POSITION] X: {x:.2f}, Y: {y:.2f}")
 
             set_dmx_values(x, y)
 
