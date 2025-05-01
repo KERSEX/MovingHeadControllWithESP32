@@ -1,5 +1,3 @@
-# MovingHeadControllWithESP32
-
 # Anleitung zum richtigen Einrichten der ESP32-Empfänger für Triangulation
 Um Ihr System korrekt einzurichten und präzise Positionsergebnisse zu erhalten, müssen Sie die Empfänger-Koordinaten im Code exakt an Ihre reale Aufstellung anpassen. Hier ist eine Schritt-für-Schritt-Anleitung:
 
