@@ -41,8 +41,3 @@ Wenn die Empfänger nicht genau auf einer Linie sind:
 
 Messen Sie den horizontalen (X) Abstand
 Messen Sie den vertikalen (Y) Abstand
-
-
-
-## 4. Anpassung des Codes
-Ändern Sie im Python-Code die Werte entsprechend Ihrer Messungen:
